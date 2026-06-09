@@ -31,7 +31,7 @@ router.get('/data/:discorduserid', (req, res) => {
     const assets = a.assets;
     const party = a.party;
     const secrets = a.secrets;
-    const flags = a.flags?.bitfield ?? 0n;
+    const flags = a.flags?.bitfield ?? 0;
 
     return {
       application: {
@@ -61,7 +61,7 @@ router.get('/data/:discorduserid', (req, res) => {
         spectate: secrets.spectate || null,
         match: secrets.match || null,
       } : { join: null, spectate: null, match: null },
-      instance: (flags & 1n) === 1n,
+      instance: (flags & 1) === 1,
     };
   });
 

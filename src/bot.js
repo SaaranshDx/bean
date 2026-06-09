@@ -41,7 +41,7 @@ export function injectMockPresence(userId) {
         spectate: 'mock-spectate-secret',
         match: 'mock-match-secret',
       },
-      flags: { bitfield: 1n },
+      flags: { bitfield: 1 },
     }],
   };
 
