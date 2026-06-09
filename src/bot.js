@@ -4,6 +4,51 @@ const presences = new Map();
 let ready = false;
 let client;
 
+export function injectMockPresence(userId) {
+  const mock = {
+    userId,
+    member: {
+      user: {
+        id: userId,
+        username: 'MockUser',
+        globalName: 'Mock User',
+        displayAvatarURL: () => `https://cdn.discordapp.com/avatars/${userId}/mock.png`,
+      },
+    },
+    activities: [{
+      applicationId: '383226320970055681',
+      name: 'Mock Application',
+      type: 0,
+      state: 'Running mock tests',
+      details: 'Testing the Rich Presence API',
+      timestamps: {
+        start: new Date(Date.now() - 7_200_000),
+        end: new Date(Date.now() + 3_600_000),
+      },
+      assets: {
+        largeImage: 'mock_large',
+        largeImageText: 'Mock Large Image',
+        smallImage: 'mock_small',
+        smallImageText: 'Mock Small Image',
+      },
+      party: {
+        id: 'mock-party-001',
+        size: [3, 5],
+      },
+      buttons: ['Mock Button 1', 'Mock Button 2'],
+      secrets: {
+        join: 'mock-join-secret',
+        spectate: 'mock-spectate-secret',
+        match: 'mock-match-secret',
+      },
+      flags: { bitfield: 1n },
+    }],
+  };
+
+  presences.set(userId, mock);
+  return userId;
+}
+
 export function getPresences() {
   return presences;
 }

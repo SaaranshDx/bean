@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getPresences, isReady } from './bot.js';
+import { getPresences, isReady, injectMockPresence } from './bot.js';
 
 const router = Router();
 
@@ -77,6 +77,16 @@ router.get('/data/:discorduserid', (req, res) => {
     activities,
     richPresence,
   });
+});
+
+router.post('/mock', (_req, res) => {
+  if (!isReady()) {
+    return res.status(503).json({ error: 'Discord bot is not ready yet' });
+  }
+
+  const mockUserId = '000000000000000001';
+  injectMockPresence(mockUserId);
+  res.json({ message: 'Mock presence injected', userId: mockUserId });
 });
 
 export default router;
