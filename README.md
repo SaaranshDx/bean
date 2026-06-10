@@ -11,6 +11,6 @@
 <p align="center">
   <a href="https://github.com/SaaranshDx/bean"><strong>Source</strong></a> ·
   <a href="https://github.com/SaaranshDx/bean/issues"><strong>Issues</strong></a> ·
-  <a href="https://github.com/SaaranshDx/Hex-server/tree/main/docs"><strong>Docs</strong></a>
+  <a href="https://github.com/SaaranshDx/bean/tree/main/docs"><strong>Docs</strong></a>
 </p>
 <br/>
