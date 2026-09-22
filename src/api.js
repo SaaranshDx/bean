@@ -55,7 +55,10 @@ router.get('/data/:discorduserid', (req, res) => {
         size: party.size?.[0] ?? null,
         max: party.size?.[1] ?? null,
       } : null,
-      buttons: a.buttons?.map(label => ({ label })) || [],
+      buttons: a.buttons?.map(button => ({
+        label: typeof button === 'string' ? button : button.label,
+        url: typeof button === 'string' ? null : button.url || null,
+      })) || [],
       secrets: secrets ? {
         join: secrets.join || null,
         spectate: secrets.spectate || null,
