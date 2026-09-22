@@ -35,7 +35,10 @@ export function injectMockPresence(userId) {
         id: 'mock-party-001',
         size: [3, 5],
       },
-      buttons: ['Mock Button 1', 'Mock Button 2'],
+      buttons: [
+        { label: 'Mock Button 1', url: 'https://example.com/button1' },
+        { label: 'Mock Button 2', url: 'https://example.com/button2' },
+      ],
       secrets: {
         join: 'mock-join-secret',
         spectate: 'mock-spectate-secret',
@@ -66,7 +69,7 @@ export async function startBot(token) {
     ],
   });
 
-  client.on('ready', async () => {
+  const refreshPresences = async () => {
     for (const guild of client.guilds.cache.values()) {
       try {
         await guild.members.fetch();
@@ -79,7 +82,12 @@ export async function startBot(token) {
         // guild may be unavailable or too large
       }
     }
+  };
+
+  client.on('ready', async () => {
+    await refreshPresences();
     ready = true;
+    setInterval(refreshPresences, 1000);
   });
 
   client.on('presenceUpdate', (_oldPresence, newPresence) => {
