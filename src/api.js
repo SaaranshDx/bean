@@ -5,6 +5,21 @@ const router = Router();
 
 const SNOWFLAKE_RE = /^\d{17,20}$/;
 
+const BUTTON_URL_FALLBACKS = {
+  'Bean Test Application': 'https://github.com/SaaranshDx/bean',
+  'View Repo': 'https://github.com/SaaranshDx/bean',
+  'Join Test': null,
+};
+
+function resolveButtonUrl(appName, button) {
+  const fromButton = typeof button === 'string' ? null : button.url || null;
+  if (fromButton) {
+    return fromButton;
+  }
+  const label = typeof button === 'string' ? button : button.label;
+  return BUTTON_URL_FALLBACKS[label] ?? BUTTON_URL_FALLBACKS[appName] ?? null;
+}
+
 router.get('/data/:discorduserid', (req, res) => {
   const userId = req.params.discorduserid;
 
@@ -57,7 +72,7 @@ router.get('/data/:discorduserid', (req, res) => {
       } : null,
       buttons: a.buttons?.map(button => ({
         label: typeof button === 'string' ? button : button.label,
-        url: typeof button === 'string' ? null : button.url || null,
+        url: resolveButtonUrl(a.name, button),
       })) || [],
       secrets: secrets ? {
         join: secrets.join || null,
