@@ -8,6 +8,7 @@ const SNOWFLAKE_RE = /^\d{17,20}$/;
 const BUTTON_URL_FALLBACKS = {
   'Bean Test Application': 'https://github.com/SaaranshDx/bean',
   'View Repo': 'https://github.com/SaaranshDx/bean',
+  'View Repository': 'https://github.com/SaaranshDx/bean',
   'Join Test': null,
 };
 
