@@ -18,7 +18,7 @@ app.use((req, res, next) => {
 app.use(apiRouter);
 
 app.get('/', (_req, res) => {
-  res.json({ status: 'ok', bot: isReady() ? 'ready' : 'connecting' });
+  res.json({ message: 'Welcome to bean documentation at https://github.com/SaaranshDx/bean/blob/main/docs/README.md', status: 'ok', bot: isReady() ? 'ready' : 'connecting' });
 });
 
 app.use((_req, res) => {
