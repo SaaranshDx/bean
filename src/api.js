@@ -77,6 +77,8 @@ router.get('/data/:discorduserid', (req, res) => {
     username: user?.username || null,
     globalName: user?.globalName || null,
     avatar: user?.displayAvatarURL({ size: 128 }) || null,
+    status: presence.status || null,
+    clientStatus: presence.clientStatus || null,
     activities,
     richPresence,
   });

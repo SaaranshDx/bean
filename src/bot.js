@@ -7,6 +7,8 @@ let client;
 export function injectMockPresence(userId) {
   const mock = {
     userId,
+    status: 'online',
+    clientStatus: { desktop: 'online' },
     member: {
       user: {
         id: userId,

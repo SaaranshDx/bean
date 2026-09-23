@@ -33,6 +33,11 @@ curl.exe -s http://localhost:8000/data/123456789012345678
   "username": "username",
   "globalName": "Display Name",
   "avatar": "https://cdn.discordapp.com/avatars/...",
+  "status": "online",
+  "clientStatus": {
+    "desktop": "online",
+    "mobile": "idle"
+  },
   "activities": [
     {
       "application": {
@@ -79,6 +84,8 @@ curl.exe -s http://localhost:8000/data/123456789012345678
 | `username` | string | Discord username |
 | `globalName` | string | Display name |
 | `avatar` | string | Avatar URL |
+| `status` | string | User's Discord status: `online`, `idle`, `dnd`, or `offline` |
+| `clientStatus` | object | Per-platform status (`desktop`, `mobile`, `web`, `embedded`); key present only when the user is active on that platform |
 | `activities` | array | All of the user's current activities |
 | `richPresence` | object | The first activity that has rich presence data (application ID + timestamps or assets), or the first activity otherwise |
 
