@@ -11,6 +11,7 @@
     "test:presence": "node test/set-presence.js"
   },
   "dependencies": {
+    "cors": "^2.8.6",
     "discord.js": "^14",
     "dotenv": "^16",
     "express": "^4"

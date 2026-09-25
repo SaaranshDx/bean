@@ -2,10 +2,16 @@ import 'dotenv/config';
 import express from 'express';
 import { startBot, isReady } from './bot.js';
 import apiRouter from './api.js';
+import cors from 'cors'
 
 const PORT = process.env.PORT || 3000;
 
 const app = express();
+
+
+app.use(cors({
+    origin: "https://saaranshdx.github.io"
+}));
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
