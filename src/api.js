@@ -5,7 +5,7 @@ const router = Router();
 
 const SNOWFLAKE_RE = /^\d{17,20}$/;
 
-router.get('/data/:discorduserid', (req, res) => {
+router.get('api/data/:discorduserid', (req, res) => {
   const userId = req.params.discorduserid;
 
   if (!SNOWFLAKE_RE.test(userId)) {

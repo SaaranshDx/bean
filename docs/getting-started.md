@@ -36,7 +36,7 @@ The server starts on the configured port (default 8000). The bot connects to Dis
 curl.exe -X POST http://localhost:8000/mock
 # {"message":"Mock presence injected","userId":"000000000000000001"}
 
-curl.exe -s http://localhost:8000/data/000000000000000001
+curl.exe -s http://localhost:8000/api/data/000000000000000001
 ```
 
 ### End-to-end testing with a second bot

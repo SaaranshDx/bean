@@ -8,7 +8,7 @@ Health check. Returns `200` when the server is running.
 {"status":"ok","bot":"ready"}
 ```
 
-## `GET /data/:discorduserid`
+## `GET api/data/:discorduserid`
 
 Returns the rich presence data for the given Discord user ID.
 
@@ -22,7 +22,7 @@ Returns the rich presence data for the given Discord user ID.
 **Example:**
 
 ```bash
-curl.exe -s http://localhost:8000/data/123456789012345678
+curl.exe -s http://localhost:8000/api/data/123456789012345678
 ```
 
 **Response structure:**
