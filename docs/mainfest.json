@@ -1,0 +1,7 @@
+{
+  "api": "https://raw.githubusercontent.com/SaaranshDx/bean/refs/heads/main/docs/api.md",
+  "architecture": "https://raw.githubusercontent.com/SaaranshDx/bean/refs/heads/main/docs/architecture.md",
+  "getting started": "https://raw.githubusercontent.com/SaaranshDx/bean/refs/heads/main/docs/getting-started.md",
+  "project structure": "https://raw.githubusercontent.com/SaaranshDx/bean/refs/heads/main/docs/project-structure.md",
+  "readme": "https://raw.githubusercontent.com/SaaranshDx/bean/refs/heads/main/docs/README.md"
+}

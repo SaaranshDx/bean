@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bean</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;1,500&display=swap"
+    rel="stylesheet"
+  >
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+  >
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <style>
+    :root {
+      --yellow: #ffdc4b;
+      --brown: #60483e;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--yellow);
+      color: var(--brown);
+      font-family: "DM Mono", monospace;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      color: inherit;
+      font: inherit;
+    }
+
+    ::selection {
+      background: var(--brown);
+      color: var(--yellow);
+    }
+
+    nav {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 38px 46px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 10;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: -0.04em;
+    }
+
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 26px;
+    }
+
+    .links a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      opacity: 0.58;
+      transition:
+        opacity 150ms ease,
+        transform 150ms ease;
+    }
+
+    .links a:hover {
+      opacity: 1;
+      transform: translateY(-2px);
+    }
+
+    .links i {
+      font-size: 15px;
+    }
+
+    .links .company img {
+      width: 17px;
+      height: 17px;
+      display: block;
+      filter: brightness(0) saturate(100%);
+      opacity: 0.75;
+    }
+
+    .links .company:hover img {
+      opacity: 1;
+    }
+
+    .legal-links {
+      position: absolute;
+      right: 46px;
+      bottom: 42px;
+      display: flex;
+      gap: 20px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.5;
+      z-index: 5;
+    }
+
+    .legal-links button {
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      font-size: inherit;
+      text-transform: inherit;
+      letter-spacing: inherit;
+      cursor: pointer;
+      transition: opacity 150ms ease;
+    }
+
+    .legal-links button:hover {
+      opacity: 1;
+    }
+
+    .hero {
+      min-height: 100vh;
+      padding: 48px;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero-inner {
+      width: min(100%, 1100px);
+      margin-left: 9vw;
+      margin-top: 1vh;
+    }
+
+    .eyebrow {
+      margin-bottom: 34px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      opacity: 0.65;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 1050px;
+      font-family: "Playfair Display", serif;
+      font-size: clamp(64px, 8vw, 125px);
+      font-weight: 500;
+      line-height: 0.84;
+      letter-spacing: -0.06em;
+    }
+
+    h1 .line {
+      display: block;
+      white-space: nowrap;
+    }
+
+    h1 em {
+      font-weight: 500;
+      font-style: italic;
+    }
+
+    .intro {
+      max-width: 470px;
+      margin-top: 48px;
+      font-size: 13px;
+      line-height: 1.8;
+      opacity: 0.68;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      gap: 32px;
+      margin-top: 30px;
+      padding: 17px 20px;
+      background: var(--brown);
+      color: var(--yellow);
+      border: 1px solid var(--brown);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition:
+        background 150ms ease,
+        color 150ms ease,
+        transform 150ms ease;
+    }
+
+    .button:hover {
+      background: transparent;
+      color: var(--brown);
+      transform: translateY(-2px);
+    }
+
+    .button span {
+      font-size: 17px;
+      line-height: 1;
+    }
+
+    .modal,
+    .docs-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      padding: 30px;
+
+      background: rgba(96, 72, 62, 0.18);
+
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+
+      transition:
+        opacity 160ms ease,
+        visibility 160ms ease;
+    }
+
+    .modal.active,
+    .docs-modal.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .modal-box {
+      width: min(680px, 100%);
+      max-height: min(720px, 85vh);
+      padding: 36px;
+      overflow-y: auto;
+      background: var(--yellow);
+      border: 1px solid var(--brown);
+      box-shadow: 12px 12px 0 var(--brown);
+      transform: translateY(12px);
+      transition: transform 160ms ease;
+    }
+
+    .modal.active .modal-box {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 30px;
+      margin-bottom: 45px;
+    }
+
+    .modal-title {
+      margin: 0;
+      font-family: "Playfair Display", serif;
+      font-size: clamp(42px, 6vw, 70px);
+      font-weight: 500;
+      line-height: 0.9;
+      letter-spacing: -0.05em;
+    }
+
+    .modal-close,
+    .docs-close {
+      width: 32px;
+      height: 32px;
+      flex: 0 0 auto;
+      padding: 0;
+      border: 1px solid var(--brown);
+      background: transparent;
+      color: var(--brown);
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      transition:
+        background 150ms ease,
+        color 150ms ease;
+    }
+
+    .modal-close:hover,
+    .docs-close:hover {
+      background: var(--brown);
+      color: var(--yellow);
+    }
+
+    .modal-content {
+      font-size: 12px;
+      line-height: 1.9;
+      opacity: 0.75;
+    }
+
+    .modal-content p {
+      margin: 0 0 24px;
+    }
+
+    .modal-content p:last-child {
+      margin-bottom: 0;
+    }
+
+    .modal-content strong {
+      color: var(--brown);
+      opacity: 1;
+    }
+
+    .docs-window {
+      width: min(1100px, 100%);
+      height: min(760px, 88vh);
+      display: flex;
+      flex-direction: column;
+      background: var(--yellow);
+      border: 1px solid var(--brown);
+      box-shadow: 12px 12px 0 var(--brown);
+      transform: translateY(12px);
+      transition: transform 160ms ease;
+    }
+
+    .docs-modal.active .docs-window {
+      transform: translateY(0);
+    }
+
+    .docs-header {
+      height: 64px;
+      flex-shrink: 0;
+      padding: 0 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--brown);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .docs-layout {
+      min-height: 0;
+      flex: 1;
+      display: grid;
+      grid-template-columns: 210px minmax(0, 1fr);
+    }
+
+    .docs-sidebar {
+      padding: 20px 14px;
+      overflow-y: auto;
+      border-right: 1px solid var(--brown);
+    }
+
+    .docs-page {
+      width: 100%;
+      padding: 11px 12px;
+      display: block;
+      border: 0;
+      background: transparent;
+      color: var(--brown);
+      text-align: left;
+      font: inherit;
+      font-size: 11px;
+      cursor: pointer;
+      transition:
+        background 120ms ease,
+        color 120ms ease;
+    }
+
+    .docs-page:hover,
+    .docs-page.active {
+      background: var(--brown);
+      color: var(--yellow);
+    }
+
+    .docs-content {
+      min-width: 0;
+      overflow-y: auto;
+      padding: 55px 75px;
+    }
+
+    .docs-placeholder,
+    .docs-loading,
+    .docs-error {
+      font-size: 12px;
+      line-height: 1.8;
+      opacity: 0.6;
+    }
+
+    .docs-markdown {
+      max-width: 760px;
+      margin: 0 auto;
+      font-size: 13px;
+      line-height: 1.85;
+    }
+
+    .docs-markdown h1,
+    .docs-markdown h2,
+    .docs-markdown h3,
+    .docs-markdown h4 {
+      margin-top: 2em;
+      margin-bottom: 0.7em;
+      font-family: "Playfair Display", serif;
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: -0.035em;
+    }
+
+    .docs-markdown h1 {
+      margin-top: 0;
+      font-size: clamp(45px, 6vw, 75px);
+    }
+
+    .docs-markdown h2 {
+      font-size: 42px;
+    }
+
+    .docs-markdown h3 {
+      font-size: 30px;
+    }
+
+    .docs-markdown h4 {
+      font-size: 22px;
+    }
+
+    .docs-markdown p {
+      margin: 0 0 1.4em;
+    }
+
+    .docs-markdown a {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .docs-markdown ul,
+    .docs-markdown ol {
+      padding-left: 25px;
+    }
+
+    .docs-markdown li {
+      margin-bottom: 7px;
+    }
+
+    .docs-markdown code {
+      padding: 2px 5px;
+      background: rgba(96, 72, 62, 0.1);
+      font-size: 0.9em;
+    }
+
+    .docs-markdown pre {
+      margin: 25px 0;
+      padding: 20px;
+      overflow-x: auto;
+      background: var(--brown);
+      color: var(--yellow);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .docs-markdown pre code {
+      padding: 0;
+      background: transparent;
+    }
+
+    .docs-markdown blockquote {
+      margin: 25px 0;
+      padding-left: 20px;
+      border-left: 2px solid var(--brown);
+      opacity: 0.7;
+    }
+
+    .docs-markdown img {
+      max-width: 100%;
+    }
+
+    .docs-markdown hr {
+      margin: 40px 0;
+      border: 0;
+      border-top: 1px solid var(--brown);
+      opacity: 0.4;
+    }
+
+    @media (max-width: 700px) {
+      nav {
+        padding: 28px;
+      }
+
+      .hero {
+        padding: 28px;
+      }
+
+      .hero-inner {
+        margin-left: 0;
+      }
+
+      .links {
+        gap: 20px;
+      }
+
+      .links a {
+        width: 20px;
+        height: 20px;
+      }
+
+      .legal-links {
+        right: 28px;
+        bottom: 28px;
+      }
+
+      h1 {
+        font-size: clamp(54px, 16vw, 100px);
+        line-height: 0.87;
+      }
+
+      h1 .line {
+        white-space: normal;
+      }
+
+      .intro {
+        margin-top: 40px;
+      }
+
+      .modal,
+      .docs-modal {
+        padding: 15px;
+      }
+
+      .modal-box,
+      .docs-window {
+        box-shadow: 7px 7px 0 var(--brown);
+      }
+
+      .modal-box {
+        padding: 25px;
+      }
+
+      .modal-header {
+        margin-bottom: 32px;
+      }
+
+      .docs-window {
+        height: 92vh;
+      }
+
+      .docs-layout {
+        grid-template-columns: 145px minmax(0, 1fr);
+      }
+
+      .docs-sidebar {
+        padding: 15px 8px;
+      }
+
+      .docs-content {
+        padding: 35px 25px;
+      }
+
+      .docs-markdown {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav>
+    <a class="logo" href="/">
+      Bean
+    </a>
+
+    <div class="links">
+      <a
+        href="https://github.com/SaaranshDx/bean.git"
+        aria-label="GitHub"
+        title="GitHub"
+      >
+        <i class="fa-brands fa-github"></i>
+      </a>
+
+      <a
+        href="https://x.com/SaaranshXd"
+        aria-label="X"
+        title="X"
+      >
+        <i class="fa-brands fa-x-twitter"></i>
+      </a>
+
+      <a
+        class="company"
+        href="https://mizucode.qzz.io"
+        aria-label="Company"
+        title="Company"
+      >
+        <img
+          src="https://cdn.jsdelivr.net/npm/@primer/octicons@19.8.0/build/svg/organization-24.svg"
+          alt=""
+        >
+      </a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="hero-inner">
+
+        <div class="eyebrow">
+          Discord RPC → API
+        </div>
+
+        <h1>
+          <span class="line">Presence</span>
+          <span class="line">should be</span>
+          <span class="line"><em>Where you want</em></span>
+          <span class="line"><em>to shove it</em></span>
+        </h1>
+
+        <p class="intro">
+          Bean exposes Discord Rich Presence through
+          a dead simple api, so even a baby can access it
+        </p>
+
+        <button class="button" id="open-docs" type="button">
+          View the API
+          <span>↗</span>
+        </button>
+
+      </div>
+    </section>
+  </main>
+
+  <div class="legal-links">
+    <button type="button" data-modal="terms">
+      Terms
+    </button>
+
+    <button type="button" data-modal="privacy">
+      Privacy
+    </button>
+  </div>
+
+  <div
+    class="modal"
+    id="terms"
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="terms-title"
+  >
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 class="modal-title" id="terms-title">
+          Terms
+        </h2>
+
+        <button
+          class="modal-close"
+          type="button"
+          aria-label="Close"
+        >
+          ×
+        </button>
+      </div>
+
+      <div class="modal-content">
+        <p>
+          <strong>Use of Bean</strong><br>
+          Bean provides access to Discord Rich Presence data through its
+          endpoints. By using Bean, you agree to use the service lawfully
+          and responsibly.
+        </p>
+
+        <p>
+          <strong>Availability</strong><br>
+          Bean is provided as-is and may change, become unavailable, or
+          have its endpoints modified without notice.
+        </p>
+
+        <p>
+          <strong>Abuse</strong><br>
+          Do not use Bean to abuse, overload, disrupt, or interfere with
+          the service or its infrastructure.
+        </p>
+
+        <p>
+          <strong>Changes</strong><br>
+          These terms may be updated when necessary.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal"
+    id="privacy"
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="privacy-title"
+  >
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 class="modal-title" id="privacy-title">
+          Privacy
+        </h2>
+
+        <button
+          class="modal-close"
+          type="button"
+          aria-label="Close"
+        >
+          ×
+        </button>
+      </div>
+
+      <div class="modal-content">
+        <p>
+          <strong>What Bean exposes</strong><br>
+          Bean exposes Discord Rich Presence information made available
+          to the service.
+        </p>
+
+        <p>
+          <strong>Personal information</strong><br>
+          Bean does not intentionally collect information unrelated to
+          the operation of its presence endpoints.
+        </p>
+
+        <p>
+          <strong>Logs</strong><br>
+          Requests may be temporarily logged for operational, security,
+          debugging, or abuse-prevention purposes.
+        </p>
+
+        <p>
+          <strong>Changes</strong><br>
+          This privacy notice may be updated as Bean changes.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="docs-modal"
+    id="docs-modal"
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="docs-title"
+  >
+    <div class="docs-window">
+
+      <div class="docs-header">
+        <span id="docs-title">
+          Bean / Docs
+        </span>
+
+        <button
+          class="docs-close"
+          id="docs-close"
+          type="button"
+          aria-label="Close documentation"
+        >
+          ×
+        </button>
+      </div>
+
+      <div class="docs-layout">
+
+        <aside
+          class="docs-sidebar"
+          id="docs-sidebar"
+        >
+          <div class="docs-loading">
+            Loading...
+          </div>
+        </aside>
+
+        <main
+          class="docs-content"
+          id="docs-content"
+        >
+          <div class="docs-placeholder">
+            Select a page.
+          </div>
+        </main>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const DOCS_MANIFEST_URL =
+      "https://raw.githubusercontent.com/SaaranshDx/bean/refs/heads/main/docs/manifest.json";
+
+    const docsModal = document.getElementById("docs-modal");
+    const docsSidebar = document.getElementById("docs-sidebar");
+    const docsContent = document.getElementById("docs-content");
+    const openDocsButton = document.getElementById("open-docs");
+    const closeDocsButton = document.getElementById("docs-close");
+
+    const modals = document.querySelectorAll(".modal");
+    const modalTriggers = document.querySelectorAll("[data-modal]");
+    const modalCloseButtons = document.querySelectorAll(".modal-close");
+
+    let docsManifest = null;
+
+    openDocsButton.addEventListener("click", async () => {
+      docsModal.classList.add("active");
+      docsModal.setAttribute("aria-hidden", "false");
+      document.body.classList.add("modal-open");
+
+      if (!docsManifest) {
+        await loadDocsManifest();
+      }
+    });
+
+    closeDocsButton.addEventListener("click", closeDocs);
+
+    docsModal.addEventListener("click", (event) => {
+      if (event.target === docsModal) {
+        closeDocs();
+      }
+    });
+
+    modalTriggers.forEach((trigger) => {
+      trigger.addEventListener("click", () => {
+        openModal(trigger.dataset.modal);
+      });
+    });
+
+    modalCloseButtons.forEach((button) => {
+      button.addEventListener("click", closeModals);
+    });
+
+    modals.forEach((modal) => {
+      modal.addEventListener("click", (event) => {
+        if (event.target === modal) {
+          closeModals();
+        }
+      });
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape") {
+        return;
+      }
+
+      if (docsModal.classList.contains("active")) {
+        closeDocs();
+        return;
+      }
+
+      closeModals();
+    });
+
+    function openModal(id) {
+      const modal = document.getElementById(id);
+
+      if (!modal) {
+        return;
+      }
+
+      closeDocs();
+
+      modals.forEach((item) => {
+        item.classList.remove("active");
+        item.setAttribute("aria-hidden", "true");
+      });
+
+      modal.classList.add("active");
+      modal.setAttribute("aria-hidden", "false");
+
+      document.body.classList.add("modal-open");
+    }
+
+    function closeModals() {
+      modals.forEach((modal) => {
+        modal.classList.remove("active");
+        modal.setAttribute("aria-hidden", "true");
+      });
+
+      if (!docsModal.classList.contains("active")) {
+        document.body.classList.remove("modal-open");
+      }
+    }
+
+    function closeDocs() {
+      docsModal.classList.remove("active");
+      docsModal.setAttribute("aria-hidden", "true");
+
+      if (
+        !Array.from(modals).some((modal) =>
+          modal.classList.contains("active")
+        )
+      ) {
+        document.body.classList.remove("modal-open");
+      }
+    }
+
+    async function loadDocsManifest() {
+      docsSidebar.innerHTML = `
+        <div class="docs-loading">
+          Loading...
+        </div>
+      `;
+
+      try {
+        const response = await fetch(DOCS_MANIFEST_URL, {
+          cache: "no-cache"
+        });
+
+        if (!response.ok) {
+          throw new Error(
+            `Manifest request failed with ${response.status}`
+          );
+        }
+
+        const manifest = await response.json();
+
+        if (
+          typeof manifest !== "object" ||
+          manifest === null ||
+          Array.isArray(manifest)
+        ) {
+          throw new Error("Invalid manifest format.");
+        }
+
+        docsManifest = manifest;
+
+        renderDocsSidebar();
+
+        const firstPage = Object.entries(docsManifest)[0];
+
+        if (firstPage) {
+          await loadDoc(firstPage[0], firstPage[1]);
+        } else {
+          docsContent.innerHTML = `
+            <div class="docs-placeholder">
+              No documentation pages found.
+            </div>
+          `;
+        }
+
+      } catch (error) {
+        console.error("Failed to load Bean docs:", error);
+
+        docsSidebar.innerHTML = `
+          <div class="docs-error">
+            Failed to load docs.
+          </div>
+        `;
+
+        docsContent.innerHTML = `
+          <div class="docs-error">
+            Could not load the documentation manifest.
+            <br><br>
+            ${escapeHtml(error.message)}
+          </div>
+        `;
+      }
+    }
+
+    function renderDocsSidebar() {
+      docsSidebar.innerHTML = "";
+
+      for (const [name, url] of Object.entries(docsManifest)) {
+        const button = document.createElement("button");
+
+        button.className = "docs-page";
+        button.type = "button";
+        button.textContent = name;
+
+        button.addEventListener("click", () => {
+          loadDoc(name, url);
+        });
+
+        docsSidebar.appendChild(button);
+      }
+    }
+
+    async function loadDoc(name, url) {
+      const buttons = docsSidebar.querySelectorAll(".docs-page");
+
+      buttons.forEach((button) => {
+        button.classList.toggle(
+          "active",
+          button.textContent === name
+        );
+      });
+
+      docsContent.innerHTML = `
+        <div class="docs-loading">
+          Loading ${escapeHtml(name)}...
+        </div>
+      `;
+
+      try {
+        const response = await fetch(url, {
+          cache: "no-cache"
+        });
+
+        if (!response.ok) {
+          throw new Error(
+            `Document request failed with ${response.status}`
+          );
+        }
+
+        const markdown = await response.text();
+
+        docsContent.innerHTML = `
+          <article class="docs-markdown">
+            ${marked.parse(markdown)}
+          </article>
+        `;
+
+        docsContent.scrollTop = 0;
+
+      } catch (error) {
+        console.error(
+          `Failed to load "${name}":`,
+          error
+        );
+
+        docsContent.innerHTML = `
+          <div class="docs-error">
+            Failed to load this page.
+            <br><br>
+            ${escapeHtml(error.message)}
+          </div>
+        `;
+      }
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+  </script>
+
+</body>
+</html>
