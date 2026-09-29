@@ -1,16 +1,42 @@
 # API Reference
 
+**Base URL:** `https://beanapi.mizucode.qzz.io`
+
+All endpoints are public `GET` requests over HTTPS. No authentication, API key, or rate-limit signup is required. CORS is enabled, so the API can be called directly from browser clients.
+
+---
+
 ## `GET /`
 
-Health check. Returns `200` when the server is running.
+Service health check. Returns `200` with the bot connection status.
 
-```json
-{"status":"ok","bot":"ready"}
+```bash
+curl.exe -s https://beanapi.mizucode.qzz.io
 ```
 
-## `GET api/data/:discorduserid`
+**Response:**
+
+```json
+{"message":"Welcome to bean documentation at https://github.com/SaaranshDx/bean/blob/main/docs/README.md","status":"ok","bot":"ready"}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `message` | string | Link to this documentation |
+| `status` | string | `ok` when the HTTP server is serving requests |
+| `bot` | string | `ready` when the Discord bot is connected and caching presences |
+
+---
+
+## `GET /api/data/:discorduserid`
 
 Returns the rich presence data for the given Discord user ID.
+
+The `:discorduserid` path parameter must be a valid Discord snowflake: 17 to 20 digits.
+
+```bash
+curl.exe -s https://beanapi.mizucode.qzz.io/api/data/123456789012345678
+```
 
 | Status | Meaning |
 |--------|---------|
@@ -18,11 +44,20 @@ Returns the rich presence data for the given Discord user ID.
 | `400` | Invalid Discord user ID format |
 | `404` | No presence data found |
 | `503` | Bot is not yet connected to Discord |
+| `500` | Internal server error |
 
-**Example:**
+**Error responses:**
 
-```bash
-curl.exe -s http://localhost:8000/api/data/123456789012345678
+```json
+{ "error": "Invalid Discord user ID format" }
+```
+
+```json
+{ "error": "No presence data found. The bot must share a guild with this user and the user must be online." }
+```
+
+```json
+{ "error": "Discord bot is not ready yet" }
 ```
 
 **Response structure:**
@@ -62,7 +97,7 @@ curl.exe -s http://localhost:8000/api/data/123456789012345678
         "max": 4
       },
       "buttons": [
-        { "label": "Join Website" }
+        { "label": "Join Website", "url": null }
       ],
       "secrets": {
         "join": null,
@@ -89,6 +124,8 @@ curl.exe -s http://localhost:8000/api/data/123456789012345678
 | `activities` | array | All of the user's current activities |
 | `richPresence` | object | The first activity that has rich presence data (application ID + timestamps or assets), or the first activity otherwise |
 
+Absent values are returned as `null` rather than being omitted. A user with no activities has an empty `activities` array and a `null` `richPresence`.
+
 ### Activity fields
 
 | Field | Type | Description |
@@ -106,22 +143,8 @@ curl.exe -s http://localhost:8000/api/data/123456789012345678
 | `party.id` | string | Party/lobby identifier |
 | `party.size` | number | Current party size |
 | `party.max` | number | Maximum party size |
-| `buttons` | array | Button labels (URLs are not available through the Gateway) |
+| `buttons` | array | Button labels as `{ "label", "url" }` objects; `url` is `null` when Discord does not share it |
 | `secrets.join` | string | Join secret for direct multiplayer invites |
 | `secrets.spectate` | string | Spectate secret |
 | `secrets.match` | string | Match secret |
 | `instance` | boolean | Whether this is an active game session |
-
-## `POST /mock`
-
-Injects a fake presence into the cache for testing. Returns the mock user ID.
-
-```bash
-curl.exe -X POST http://localhost:8000/mock
-```
-
-**Response:**
-
-```json
-{"message":"Mock presence injected","userId":"000000000000000001"}
-```
